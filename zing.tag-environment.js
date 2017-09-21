@@ -1,6 +1,7 @@
 (function () {
     zing.TagEnvironment = function ($tag, $guid, $html, $jstemplate) {
-        var $env = {},
+        var $env = {}, 
+            $private = {for:[]},
             $intervalfn = [],
             $interval = setInterval(function () {
                 $intervalfn.forEach(function (fn) {
@@ -61,13 +62,31 @@
         }
 
         function $for() {
-            $intervalfn.push(function () {
+
+            //for element to watch if the loop changes
+            //ar.length amount of ele inside the for
+            //replace $: with $[todos:1].variableName
+
                 zing.getUnder($tag, '_for').forEach(function (ele) {
-                    var variableName;
-                    var arName;
+                    var elemArray = ele.attributes.for.value.split(':');
+                    var arrName = elemArray[0];
+                    var variableName = elemArray[1];
+
+                    var forEle = document.createElement('for');
+                    ele.parentElement.replaceChild(forEle, ele);
+                    var arr = $env[arrName];
+                    $private.for[arrName] = arr;
+                    
+                    arr.forEach(function (item, i){
+                        var clone = ele.cloneNode(true);
+                        clone.removeAttribute('for');
+                        Array.from(clone.attributes).forEach(function(attr){
+                            attr.value = attr.value.split('$:'+variableName).join('$$'+arrName+'['+ i +']');
+                        })
+                        forEle.appendChild(clone);
+                    });
 
                 });
-            })
         }
 
         //post
@@ -75,9 +94,11 @@
             var ar = zing.getUnder($tag, '_click');
             if (ar)
                 ar.forEach(function (ele) {
-                    ele.addEventListener('click', function () {
+                    function handleClick () {
                         eval(parseExpression(ele.attributes.click.value));
-                    })
+                    }
+                    ele.removeEventListener('click', handleClick);
+                    ele.addEventListener('click', handleClick);
                 });
         }
 
@@ -90,6 +111,7 @@
             $bind();
             $if();
             eval($jstemplate);
+            $for();
             $click();
         }
 

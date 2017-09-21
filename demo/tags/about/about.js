@@ -1,9 +1,1 @@
-$env.todoInput = "";
-$env.todos = [
-    "Go to the mall"
-];
-$env.createTodo = function () {
-    $env.todos.push($env.todoInput);
-    $env.todoInput = "";
-    console.log($env.todos);
-};
+$env.todos = [{title:'title 1', desc:'desc 1'}, {title:'title 2', desc:'desc 2'}];
