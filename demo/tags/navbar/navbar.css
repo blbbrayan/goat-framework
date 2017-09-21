@@ -1,0 +1,30 @@
+.left{
+    float: left;
+}
+.right{
+    float: right;
+}
+a, strong {
+    padding: 0 10px;
+    line-height: 44px;
+    color: white !important;
+    text-decoration: none;
+}
+a{
+    float: right;
+    transition: background-color .25s;
+    font-family: sans-serif;
+}
+a:hover{
+    background-color: rgba(255, 255, 255, 0.1);
+}
+strong{
+    font-size: 120%;
+    padding-left: 20px;
+}
+nav{
+    color: white;
+}
+.active{
+    background-color: rgba(0, 0, 0, 0.1) !important;
+}
