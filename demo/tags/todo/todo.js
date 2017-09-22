@@ -1,4 +1,8 @@
-$env.todos = [{title: 'title 1', desc: 'desc 1'}, {title: 'title 2', desc: 'desc 2'}];
+$env.todos = [
+    {title: 'Call dad...', desc: 'desc 1'},
+    {title: 'Say happy birthday...', desc: 'desc 2'},
+    {title: 'Mention Zing commit...', desc: 'desc 3'}
+];
 
 $env.todo = "";
 
