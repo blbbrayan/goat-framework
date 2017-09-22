@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Byrdstyle</title>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+    <link href="index.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <script src="index.js"></script>
+    
+    <nav></nav>
+
+    <div class="row">
+      <div class="card m4">
+        <span class="card-header">Card Example</span>
+        <div class="row">
+          <p>This is a card example with a card-header</p>
+        </div>
+      </div>
+
+      <div class="card m6">
+        <span class="card-title">Form Items</span>
+        <div class="row">
+          <input class="s5 m3" placeholder="Name">
+          <input class="s5 m7" placeholder="Address">
+        </div>
+        <div class="row">
+          <div class="dropdown">
+            <button class="blue">Dropdown</button>
+            <div class="menu">
+              <div class="menu-item">One</div>
+              <div class="menu-item">Two</div>
+              <div class="menu-item">Three</div>
+              <div class="menu-item">Four</div>
+            </div>
+          </div>
+        </div>
+        <div class="row right">
+          <button class="blue">Save</button>
+          <button>Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="card m2">
+        <span class="card-title">Modal</span>
+        <button class="blue" onclick="modal('modal')">Open</button>
+      </div>
+      <div class="card m8">
+        <span class="card-title">Table</span>
+        <table>
+          <tr>
+            <th>id</th>
+            <th>Name</th>
+            <th>Desc</th>
+          </tr>
+          <tr>
+            <td>0</td>
+            <td>Brayan</td>
+            <td>The css master</td>
+          </tr>
+          <tr>
+            <td>1</td>
+            <td>Brian</td>
+            <td>The original Brayan</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>Bob</td>
+            <td>Who's Bob?</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="modal" id="modal">
+      <div class="modal-full">
+        <span class="card-title">Modal</span>
+        <div class="row">
+          <p>Some Text</p>
+        </div>
+        <div class="modal-footer">
+          <button class="blue" onclick="closeModal('modal')">Save</button>
+          <button onclick="closeModal('modal')">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="card">
+        <span class="card-title">Tabs</span>
+        <div class="tab">
+          <div class="tab-item active">Home</div>
+          <div class="tab-item">About</div>
+        </div>
+      </div>
+    </div>
+    
+  </body>
+</html>

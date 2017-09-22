@@ -1,0 +1,87 @@
+.modal{
+    position: absolute;
+    top: -100%;
+    left: -100%;
+    width: 0;
+    height: 0;
+    background-color: rgba(0,0,0,0.3);
+    transition: background-color .3s;
+    z-index: 10;
+}
+.modal.death{
+    background-color: rgba(0,0,0,0.1);
+}
+.modal.active, .modal.death{
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+.modal-full{
+    position: absolute;
+    left: 5%;
+    right: 5%;
+    top: 5%;
+    bottom: 5%;
+    background-color: white;
+    padding: 20px;
+}
+.modal.active .modal-full{
+    animation: openModal .3s;
+}
+.modal.death .modal-full{
+    animation: closeModal .3s;
+}
+@keyframes openModal{
+    0%{
+        left: 10%;
+        right: 10%;
+        top: 15%;
+        bottom: 15%;
+        opacity: 0.5;
+    }
+    70%{
+        top: 3%;
+        bottom: 3%;
+        left: 3%;
+        right: 3%;
+        opacity: 1;
+    }
+    100%{
+        top: 5%;
+        bottom: 5%;
+        left: 5%;
+        right: 5%;
+    }
+}
+@keyframes closeModal{
+    0%{
+        top: 5%;
+        bottom: 5%;
+        left: 5%;
+        right: 5%;
+        opacity: 1;
+    }
+    30%{
+        top: 3%;
+        bottom: 3%;
+        left: 3%;
+        right: 3%;
+        opacity: 1;
+    }
+    100%{
+        left: 8%;
+        right: 8%;
+        top: 8%;
+        bottom: 8%;
+        opacity: 0.8;
+    }
+}
+
+.modal-footer{
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    text-align: right;
+}

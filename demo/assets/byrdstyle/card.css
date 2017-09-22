@@ -1,0 +1,28 @@
+/*card*/
+
+.card{
+  background-color: white;
+  padding: 10px;
+  margin: 8px 2px;
+  box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.3);
+}
+
+.card-header{
+    display: block;
+    height: 24px;
+    background: #82abed;
+    margin: -11px;
+    margin-bottom: 4px;
+    width: calc(100% + 22px);
+    margin-top: -10px;
+    text-align: center;
+    color: white;
+    font-weight: bold;
+    line-height: 24px;
+    font-size: 115%;
+}
+
+.card-title{
+    font-size: 115%;
+    display: block;
+}

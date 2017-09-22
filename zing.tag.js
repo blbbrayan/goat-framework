@@ -18,7 +18,6 @@
 
     function createTag(tagName, ele, callback) {
         var env = {};
-        console.log('loading', tagName);
         if (!(ele instanceof HTMLElement)) {
             ele = ele || window.event;
             ele = ele.target;

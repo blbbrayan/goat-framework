@@ -1,0 +1,15 @@
+.tab{
+    display: flex;
+}
+
+.tab-item{
+    display: inline-block;
+    flex-grow: 1;
+    text-align: center;
+    font-size: 110%;
+    cursor: pointer;
+}
+
+.tab-item.active{
+    color: #82abed;
+}

@@ -1,7 +1,6 @@
 (function () {
     zing.TagEnvironment = function ($tag, $guid, $html, $jstemplate) {
-        var $env = {}, 
-            $private = {for:[]},
+        var $env = {},
             $intervalfn = [],
             $interval = setInterval(function () {
                 $intervalfn.forEach(function (fn) {
@@ -10,6 +9,8 @@
             }, 100);
 
         function parseExpression(exp) {
+            if (exp.includes("$:"))
+                return "";
             return exp.split('$$').join('$env.');
         }
 
@@ -46,7 +47,7 @@
             }
 
             $intervalfn.push(function () {
-                var ar = zing.getUnder($tag, '_if')
+                var ar = zing.getUnder($tag, '_if');
                 if (ar)
                     ar.forEach(function (ele) {
                         if (!eval(parseExpression(ele.attributes.if.value)))
@@ -63,65 +64,77 @@
 
         function $for() {
 
-            //for element to watch if the loop changes
-            //ar.length amount of ele inside the for
-            //replace $: with $[todos:1].variableName
+            var watchers = [];
 
-                zing.getUnder($tag, '_for').forEach(function (ele) {
-                    var elemArray = ele.attributes.for.value.split(':');
-                    var arrName = elemArray[0];
-                    var variableName = elemArray[1];
-
-                    var forEle = document.createElement('for');
-                    ele.parentElement.replaceChild(forEle, ele);
-                    var arr = $env[arrName];
-                    $private.for[arrName] = arr;
-                    
-                    arr.forEach(function (item, i){
-                        var clone = ele.cloneNode(true);
-                        clone.removeAttribute('for');
-                        Array.from(clone.attributes).forEach(function(attr){
-                            attr.value = attr.value.split('$:'+variableName).join('$$'+arrName+'['+ i +']');
-                        })
-                        forEle.appendChild(clone);
+            function createClone(ele, forEle, varName, arrName, i, clones) {
+                var clone = ele.cloneNode(true);
+                clone.removeAttribute('for');
+                zing.allUnder(clone).forEach(function (e) {
+                    Array.from(e.attributes).forEach(function (attr) {
+                        attr.value = attr.value.split('$:' + varName).join('$$' + arrName + '[' + i + ']');
                     });
-
                 });
+                forEle.appendChild(clone);
+                clones.push(clone);
+                update();
+            }
+
+            $intervalfn.push(function () {
+                zing.getUnder($tag, '_for').forEach(function (ele) {
+                    var elemArray = ele.attributes.for.value.split(':'),
+                        arrName = elemArray[0],
+                        variableName = elemArray[1],
+                        forEle = document.createElement('for');
+                    ele.parentElement.replaceChild(forEle, ele);
+
+                    watchers.push({ele: ele, forEle: forEle, arrName: arrName, varName: variableName, clones: []});
+                });
+                watchers.forEach(function (watcher) {
+                    var ar = $env[watcher.arrName];
+                    while (watcher.clones.length < ar.length)
+                        createClone(watcher.ele, watcher.forEle, watcher.varName, watcher.arrName, watcher.clones.length, watcher.clones);
+                    while (watcher.clones.length > ar.length) {
+                        var target = watcher.clones[watcher.clones.length - 1];
+                        watcher.clones.splice(watcher.clones.indexOf(target), 1);
+                        target.remove();
+                    }
+                });
+            });
+        }
+
+        function handleClick(ele) {
+            eval(parseExpression(ele.target.attributes.click.value));
         }
 
         //post
         function $click() {
-            var ar = zing.getUnder($tag, '_click');
-            if (ar)
-                ar.forEach(function (ele) {
-                    function handleClick () {
-                        eval(parseExpression(ele.attributes.click.value));
-                    }
-                    ele.removeEventListener('click', handleClick);
-                    ele.addEventListener('click', handleClick);
-                });
+            var ar = zing.getUnder($tag, '_click') || [];
+            ar.forEach(function (ele) {
+                ele.removeEventListener('click', handleClick);
+                ele.addEventListener('click', handleClick);
+            });
         }
 
-        function post() {
+        function update() {
             $click();
         }
 
         function start() {
+            $for();
             $link();
             $bind();
             $if();
             eval($jstemplate);
-            $for();
-            $click();
+            update();
         }
 
-        function stop(){
+        function stop() {
             clearInterval($interval);
         }
 
         return {
             start: start,
-            post: post,
+            update: update,
             stop: stop
         };
     }

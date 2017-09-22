@@ -1,0 +1,21 @@
+@import url('card.css');
+@import url('form.css');
+@import url('nav.css');
+@import url('modal.css');
+@import url('tab.css');
+@import url('table.css');
+
+body{
+  font-family: 'Montserrat', sans-serif;
+  background: hsl(0, 0%, 96%);
+  margin-top: 52px;
+  color: hsl(0, 0%, 38%);
+}
+
+.blue{
+  background-color: rgb(130, 171, 237);
+}
+.blue:hover{
+  background-color: rgb(140, 180, 247);
+}
+
