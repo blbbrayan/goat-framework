@@ -20,8 +20,8 @@
                 var ar = zing.getUnder($tag, '_link');
                 if (ar)
                     ar.forEach(function (ele) {
-                        if (ele.innerHTML !== eval(parseExpression(ele.attributes.link.value)))
-                            ele.innerHTML = eval(parseExpression(ele.attributes.link.value));
+                        if (ele.innerText !== eval(parseExpression(ele.attributes.link.value)))
+                            ele.innerText = eval(parseExpression(ele.attributes.link.value));
                     })
             });
         }
@@ -69,7 +69,9 @@
             function createClone(ele, forEle, varName, arrName, i, clones) {
                 var clone = ele.cloneNode(true);
                 clone.removeAttribute('for');
-                zing.allUnder(clone).forEach(function (e) {
+                var allEle = zing.allUnder(clone);
+                allEle.push(clone);
+                allEle.forEach(function (e) {
                     Array.from(e.attributes).forEach(function (attr) {
                         attr.value = attr.value.split('$:' + varName).join('$$' + arrName + '[' + i + ']');
                     });

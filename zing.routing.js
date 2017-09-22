@@ -31,5 +31,6 @@
     zing.route('/', 'home');
     zing.route('/home', 'home');
     zing.route('/todo', 'todo');
+    zing.route('/documentation', 'documentation');
 
 })();

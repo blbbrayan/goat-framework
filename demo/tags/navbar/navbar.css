@@ -1,30 +1,24 @@
-.left{
-    float: left;
-}
-.right{
-    float: right;
-}
-a, strong {
+nav .brand, nav .link {
     padding: 0 10px;
     line-height: 44px;
     color: white !important;
     text-decoration: none;
 }
-a{
+nav a.link{
     float: right;
     transition: background-color .25s;
     font-family: sans-serif;
 }
-a:hover{
+nav a.link:hover{
     background-color: rgba(255, 255, 255, 0.1);
 }
-strong{
-    font-size: 120%;
+nav a.brand{
+    font-size: 125%;
     padding-left: 20px;
 }
 nav{
     color: white;
 }
-.active{
+nav .active{
     background-color: rgba(0, 0, 0, 0.1) !important;
 }

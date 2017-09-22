@@ -1,29 +1,11 @@
 <div class="row">
     <div class="card col-xs-10 col-xs-offset-1">
         <span class="card-title">Home</span>
-        <h3 class="col-xs-12">click - link - if</h3>
-        <button click="$$value=!$$value" link="$$value"></button>
-        <span if="$$value" class="col-xs-2">Its true!</span>
-        <br>
-        <br>
-        <div class="code-container">
-            <code id="code"></code>
+        <h1>Welcome to Zing.js!</h1>
+        <p>Zing.js is a Javascript framework that focuses on two things: Less Code and Simplicity</p>
+        <div class="center-xs">
+            <button class="blue" click="$$toDocs()">Documentation</button>
         </div>
-    </div>
-    <div class="card col-xs-10 col-xs-offset-1">
-        <span class="card-title">Attributes</span>
-        <h3>Zing Expression</h3>
-        <p>
-            A zing expression is exactly like a javascript expression, however to access your tag's environmental variables, use $$
-            <br>
-            For example home.js could include a variable like $env.helloWorld = "hello world";
-            <br>
-            To link this to an html element, you'd use a zing expression i.e link="$$helloWorld"
-        </p>
-        <h3>click</h3>
-        <p>Put a click attribute to add a click event listener.<br>You can use $$ to use $env variables.</p>
-        <h3>link</h3>
-        <p>link will set the innerHTML to the zing expression.</p>
     </div>
 </div>
 

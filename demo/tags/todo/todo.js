@@ -1,3 +1,6 @@
+$env = {};
+
+//init
 $env.todos = [
     {title: 'Call dad...', desc: 'desc 1'},
     {title: 'Say happy birthday...', desc: 'desc 2'},
@@ -6,6 +9,7 @@ $env.todos = [
 
 $env.todo = "";
 
+//functions
 $env.add = function () {
     $env.todos.push({title:$env.todo+"", desc: ''});
     zing.get('#todo').value = "";
