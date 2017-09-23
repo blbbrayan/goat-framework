@@ -1,51 +1,25 @@
-window.zing = {};
-
-(function () {
-    window.zing.isLoaded = function (url) {
-        return Array.from(document.getElementsByTagName("script")).find(function (script) {return script.src === url}) !== undefined;
-    };
-
-    window.zing.loadScript = function (url, callback) {
-        if (zing.isLoaded(url))
-            callback();
-        else {
-            // Adding the script tag to the head as suggested before
-            var head = document.getElementsByTagName('head')[0];
-            var script = document.createElement('script');
-            script.type = 'text/javascript';
-            script.src = url;
-
-            // Then bind the event to the callback function.
-            // There are several events for cross browser compatibility.
-            script.onreadystatechange = function () {
-                if (callback)
-                    callback();
-                window.zing.loaded++;
-            };
-            script.onload = function () {
-                if (callback)
-                    callback();
-                window.zing.loaded++;
-            };
-
-            // Fire the loading
-            head.appendChild(script);
+(function (global) {
+    //object extender for other zing methods
+    Object.prototype.extend = function (obj) {
+        for (var i in obj) {
+            if (obj.hasOwnProperty(i)) {
+                this[i] = obj[i];
+            }
         }
-    };
+    }
 
-    var core = Array.from(document.getElementsByTagName("script")).find(function (script){
+    global.zing = {};
+
+    var core = Array.from(document.getElementsByTagName("script")).find(function (script) {
         return script.src.includes('zing.core.js');
     });
 
-    zing.tagsDir = core['attributes']['tags-dir'].value;
-
     var prefix = core.outerHTML;
-    prefix = prefix.substr(prefix.indexOf('src="')+5, prefix.indexOf('zing.core.js"')-13);
-
+    prefix = prefix.substr(prefix.indexOf('src="') + 5, prefix.indexOf('zing.core.js"') - 13);
 
     var loaded = 0;
     var reqScripts = [
-      "tag-environment"
+        "tag-environment"
     ];
     var engineScripts = [
         "broadcast",
@@ -55,22 +29,62 @@ window.zing = {};
         "tag",
         "routing"
     ];
-    function loadScripts(ar){
-        ar.map(function (script){
-            return prefix+"zing."+script+".js";
-        }).forEach(function (script){
-            window.zing.loadScript(script, function (){loaded++})
+
+    var zing = {
+        loaded: 0,
+        tagsDir: core['attributes']['tags-dir'].value,
+        isLoaded: function (url) {
+            return Array.from(document.getElementsByTagName("script")).find(function (script) {
+                return script.src === url
+            }) !== undefined;
+        },
+        loadScript: function (url, callback) {
+            if (this.isLoaded(url))
+                callback();
+            else {
+                // Adding the script tag to the head as suggested before
+                var head = document.getElementsByTagName('head')[0];
+                var script = document.createElement('script');
+                script.type = 'text/javascript';
+                script.src = url;
+
+                // Then bind the event to the callback function.
+                // There are several events for cross browser compatibility.
+                script.onreadystatechange = function () {
+                    if (callback)
+                        callback();
+                    zing.loaded++;
+                };
+                script.onload = function () {
+                    if (callback)
+                        callback();
+                    zing.loaded++;
+                };
+
+                // Fire the loading
+                head.appendChild(script);
+            }
+        }
+    };
+
+    function loadScripts(ar) {
+        ar.map(function (script) {
+            return prefix + "zing." + script + ".js";
+        }).forEach(function (script) {
+            zing.loadScript(script, function () {
+                loaded++
+            })
         });
     }
     loadScripts(reqScripts);
 
-    var reqScriptListener = setInterval(function(){
-        if(loaded === reqScripts.length){
+    var reqScriptListener = setInterval(function () {
+        if (loaded === reqScripts.length) {
             clearInterval(reqScriptListener);
             loaded = 0;
             loadScripts(engineScripts);
-            var scriptListener = setInterval(function(){
-                if(loaded === engineScripts.length){
+            var scriptListener = setInterval(function () {
+                if (loaded === engineScripts.length) {
                     clearInterval(scriptListener);
                     start();
                 }
@@ -78,13 +92,15 @@ window.zing = {};
         }
     }, 100);
 
-    function start (){
+    function start() {
         var items = zing.get("_zing");
-        items.forEach(function (item){
-           zing.createTag(item.localName, item);
+        items.forEach(function (item) {
+            zing.createTag(item.localName, item);
         });
-        if(zing.get('router'))
+        if (zing.get('router'))
             zing.router();
     }
 
-}());
+    global.zing = zing;
+
+}(window));
