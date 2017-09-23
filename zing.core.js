@@ -52,8 +52,8 @@ window.zing = {};
         "cache",
         "gui",
         "http",
-        "routing",
-        "tag"
+        "tag",
+        "routing"
     ];
     function loadScripts(ar){
         ar.map(function (script){
