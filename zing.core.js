@@ -6,7 +6,7 @@
                 this[i] = obj[i];
             }
         }
-    }
+    };
 
     global.zing = {};
 
@@ -33,6 +33,7 @@
     var zing = {
         loaded: 0,
         tagsDir: core['attributes']['tags-dir'].value,
+        init: core['attributes']['init'].value,
         isLoaded: function (url) {
             return Array.from(document.getElementsByTagName("script")).find(function (script) {
                 return script.src === url
@@ -93,12 +94,11 @@
     }, 100);
 
     function start() {
-        var items = zing.get("_zing");
+        var items = zing.get("_zing") || [];
         items.forEach(function (item) {
             zing.createTag(item.localName, item);
         });
-        if (zing.get('router'))
-            zing.router();
+        zing.loadScript(zing.init, function () {});
     }
 
     global.zing = zing;

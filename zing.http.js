@@ -1,7 +1,7 @@
 (function (zing) {
 
     var http = {
-        httpGet: function (url, callback) {
+        get: function (url, callback) {
             var xhr = new XMLHttpRequest();
             xhr.open("GET", url, true);
             xhr.onload = function (e) {
@@ -20,6 +20,6 @@
         }
     };
 
-    zing.extend(http);
+    zing.extend({http: http});
 
 })(window.zing);

@@ -1,5 +1,5 @@
 (function () {
-    window.zing.removeComments = function(str) {
+    window.zing.removeComments = function (str) {
         return str.replace('(/\*([^*]|[\r\n]|(\*+([^*/]|[\r\n])))*\*+/)|(//.*)');
     }
 }());
@@ -91,10 +91,10 @@
         return env;
     }
 
-    zing.stopTag = function (env){
+    zing.stopTag = function (env) {
         env.tag.stop();
         zing.get('link').find(function (link) {
-            if(link.href.includes(env.css))
+            if (link.href.includes(env.css))
                 link.parentElement.removeChild(link);
         });
     };

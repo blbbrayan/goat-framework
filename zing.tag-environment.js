@@ -49,9 +49,11 @@
             $intervalfn.push(function () {
                 var ar = zing.getUnder($tag, '_if');
                 if (ar)
-                    ar.forEach(function (ele) {
-                        if (!eval(parseExpression(ele.attributes.if.value)))
+                    ar.find(function (ele) {
+                        if (!eval(parseExpression(ele.attributes.if.value))) {
                             toTemplate(ele, parseExpression(ele.attributes.if.value));
+                            return true;
+                        }
                     });
                 templates.forEach(function (template) {
                     if (eval(template.fn)) {
@@ -93,12 +95,14 @@
                 });
                 watchers.forEach(function (watcher) {
                     var ar = $env[watcher.arrName];
-                    while (watcher.clones.length < ar.length)
-                        createClone(watcher.ele, watcher.forEle, watcher.varName, watcher.arrName, watcher.clones.length, watcher.clones);
-                    while (watcher.clones.length > ar.length) {
-                        var target = watcher.clones[watcher.clones.length - 1];
-                        watcher.clones.splice(watcher.clones.indexOf(target), 1);
-                        target.remove();
+                    if(ar) {
+                        while (watcher.clones.length < ar.length)
+                            createClone(watcher.ele, watcher.forEle, watcher.varName, watcher.arrName, watcher.clones.length, watcher.clones);
+                        while (watcher.clones.length > ar.length) {
+                            var target = watcher.clones[watcher.clones.length - 1];
+                            watcher.clones.splice(watcher.clones.indexOf(target), 1);
+                            target.remove();
+                        }
                     }
                 });
             });
@@ -123,9 +127,9 @@
 
         function start() {
             $for();
+            $if();
             $link();
             $bind();
-            $if();
             eval($jstemplate);
             update();
         }

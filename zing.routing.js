@@ -1,36 +1,34 @@
-(function () {
+(function (zing) {
 
-    zing.currentTag = undefined;
-
-// A hash to store our routes:
-    zing.routes = {};
-//
-    zing.route = function (path, tagName) {
-        zing.routes[path] = tagName
-    };
-    var el = null;
-    zing.router = function () {
-        // Lazy load view element:
-        el = el || zing.get('router');
-        // Current route url (getting rid of '#' in hash as well):
-        var url = location.hash.slice(1) || '/';
-        // Get route by url:
-        var route = zing.routes[url];
-        // Do we have both a view and a route?
-        if (el && route) {
-            if (zing.currentTag)
-                zing.stopTag(zing.currentTag);
-            zing.currentTag = zing.createTag(route, el);
+    var router = {
+        currentTag: undefined,
+        routes: {},
+        addRoute: function (path, tagName) {
+            zing.router.routes[path] = tagName
+        },
+        el: null,
+        load: function () {
+            var router = zing.router;
+            // Lazy load view element:
+            router.el = router.el || zing.get('router');
+            // Current route url (getting rid of '#' in hash as well):
+            var url = location.hash.slice(1) || '/';
+            // Get route by url:
+            var route = router.routes[url];
+            // Do we have both a view and a route?
+            if (router.el && route) {
+                if (router.currentTag)
+                    zing.stopTag(router.currentTag);
+                router.currentTag = zing.createTag(route, router.el);
+            }
+        },
+        start: function () {
+            window.addEventListener('hashchange', zing.router.load);
+            window.addEventListener('load', zing.router.load);
+            zing.router.load();
         }
     };
-// Listen on hash change:
-    window.addEventListener('hashchange', zing.router);
-// Listen on page load:
-    window.addEventListener('load', zing.router);
 
-    zing.route('/', 'home');
-    zing.route('/home', 'home');
-    zing.route('/todo', 'todo');
-    zing.route('/documentation', 'documentation');
+    zing.extend({router: router});
 
-})();
+})(window.zing);
