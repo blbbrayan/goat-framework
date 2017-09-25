@@ -1,4 +1,4 @@
-(function (global) {
+(function (zing) {
 
     var subscriptions = {};
     var handler = {
@@ -16,6 +16,6 @@
         }
     };
 
-    global.zing.extend(handler);
+    zing.extend(handler);
 
-})(window);
+})(window.zing);

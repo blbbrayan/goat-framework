@@ -1,4 +1,4 @@
-(function (global) {
+(function (zing) {
 
     var gui = {
         get: function (selector) {
@@ -15,7 +15,7 @@
                 return Array.from(document.querySelectorAll("[" + selector.substr(1) + "]"));
 
             var ar = Array.from(document.getElementsByTagName(selector));
-            if (ar.length <= 1)
+            if (ar.length === 1)
                 return ar[0];
             return ar;
         },
@@ -61,6 +61,6 @@
         }
     };
 
-    global.zing.extend(gui);
+    zing.extend(gui);
 
-})(window);
+})(window.zing);

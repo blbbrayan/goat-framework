@@ -1,1 +1,0 @@
-cd $2 && mkdir $1 && cd $1 && touch $1.html && touch $1.js && touch $1.css && echo '$1 tag environment setup.'

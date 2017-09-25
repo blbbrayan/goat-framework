@@ -8,8 +8,6 @@
         }
     };
 
-    global.zing = {};
-
     var core = Array.from(document.getElementsByTagName("script")).find(function (script) {
         return script.src.includes('zing.core.js');
     });
@@ -19,13 +17,13 @@
 
     var loaded = 0;
     var reqScripts = [
+        "http",
         "tag-environment"
     ];
     var engineScripts = [
         "broadcast",
         "cache",
         "gui",
-        "http",
         "tag",
         "routing"
     ];

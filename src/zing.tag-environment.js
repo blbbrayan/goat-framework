@@ -1,4 +1,4 @@
-(function () {
+(function (zing) {
     zing.TagEnvironment = function ($tag, $guid, $html, $jstemplate) {
         var $env = {},
             $intervalfn = [],
@@ -20,8 +20,8 @@
                 var ar = zing.getUnder($tag, '_link');
                 if (ar)
                     ar.forEach(function (ele) {
-                        if (ele.innerText !== eval(parseExpression(ele.attributes.link.value)))
-                            ele.innerText = eval(parseExpression(ele.attributes.link.value));
+                        if (ele.innerText !== eval(parseExpression(ele.getAttribute('link'))))
+                            ele.innerText = eval(parseExpression(ele.getAttribute('link')));
                     })
             });
         }
@@ -31,8 +31,8 @@
                 var ar = zing.getUnder($tag, '_bind');
                 if (ar)
                     ar.forEach(function (ele) {
-                        if ($env[ele.attributes.bind.value] !== ele.value)
-                            $env[ele.attributes.bind.value] = ele.value;
+                        if ($env[ele.getAttribute('bind')] !== ele.value)
+                            $env[ele.getAttribute('bind')] = ele.value;
                     })
             });
         }
@@ -47,14 +47,13 @@
             }
 
             $intervalfn.push(function () {
-                var ar = zing.getUnder($tag, '_if');
-                if (ar)
-                    ar.find(function (ele) {
-                        if (!eval(parseExpression(ele.attributes.if.value))) {
-                            toTemplate(ele, parseExpression(ele.attributes.if.value));
-                            return true;
-                        }
-                    });
+                var ar = zing.getUnder($tag, '_if') || [];
+                ar.find(function (ele) {
+                    if (!eval(parseExpression(ele.getAttribute('if')))) {
+                        toTemplate(ele, parseExpression(ele.getAttribute('if')));
+                        return true;
+                    }
+                });
                 templates.forEach(function (template) {
                     if (eval(template.fn)) {
                         template.temp.parentElement.replaceChild(template.ele, template.temp);
@@ -85,7 +84,7 @@
 
             $intervalfn.push(function () {
                 zing.getUnder($tag, '_for').forEach(function (ele) {
-                    var elemArray = ele.attributes.for.value.split(':'),
+                    var elemArray = ele.getAttribute('for').split(':'),
                         arrName = elemArray[0],
                         variableName = elemArray[1],
                         forEle = document.createElement('for');
@@ -95,7 +94,7 @@
                 });
                 watchers.forEach(function (watcher) {
                     var ar = $env[watcher.arrName];
-                    if(ar) {
+                    if (ar) {
                         while (watcher.clones.length < ar.length)
                             createClone(watcher.ele, watcher.forEle, watcher.varName, watcher.arrName, watcher.clones.length, watcher.clones);
                         while (watcher.clones.length > ar.length) {
@@ -109,7 +108,7 @@
         }
 
         function handleClick(ele) {
-            eval(parseExpression(ele.target.attributes.click.value));
+            eval(parseExpression(ele.target.getAttribute('click')));
         }
 
         //post
@@ -144,5 +143,4 @@
             stop: stop
         };
     }
-
-}());
+})(window.zing);

@@ -1,11 +1,10 @@
-(function () {
-    window.zing.removeComments = function (str) {
+(function (zing) {
+
+    function _removeComments(str) {
         return str.replace('(/\*([^*]|[\r\n]|(\*+([^*/]|[\r\n])))*\*+/)|(//.*)');
     }
-}());
-(function () {
 
-    window.zing.generateGuid = function () {
+    function _generateGuid() {
         function s4() {
             return Math.floor((1 + Math.random()) * 0x10000)
                 .toString(16)
@@ -14,7 +13,7 @@
 
         return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
             s4() + '-' + s4() + s4() + s4();
-    };
+    }
 
     function createTag(tagName, ele, callback) {
         var env = {};
@@ -24,20 +23,16 @@
         }
 
         var path = zing.tagsDir + "/" + tagName + "/" + tagName,
-            eleGuid = zing.generateGuid();
+            eleGuid = _generateGuid();
         ele.dataset.guiId = eleGuid;
 
         function loadTemplate(onLoaded) {
-            var xhr = new XMLHttpRequest();
-            xhr.open("GET", path + ".html", true);
-            xhr.onload = function (e) {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    env.$html = (ele.innerHTML + "").replace(/\r?\n|\r/g);
-                    ele.innerHTML = xhr.responseText;
-                    onLoaded();
-                }
-            };
-            xhr.send(null);
+            zing.http.get(path + '.html', function (er, data) {
+                env.$html = (ele.innerHTML + "").replace(/\r?\n|\r/g);
+                ele.innerHTML = data;
+                onLoaded();
+            });
+
             env.template = path + '.html';
         }
 
@@ -51,24 +46,16 @@
         }
 
         function loadScript() {
-            var xhr = new XMLHttpRequest();
-            xhr.open("GET", path + ".js", true);
-            xhr.onload = function (e) {
-                if (xhr.readyState === 4) {
-                    if (xhr.status === 200) {
-                        var tag = zing.TagEnvironment(zing.get('%' + eleGuid), eleGuid, env.$html, zing.removeComments(xhr.responseText));
-                        env.tag = tag;
-                        tag.start();
-                        if (callback)
-                            callback(ele);
-                    } else
-                        console.error(xhr.statusText);
-                }
-            };
-            xhr.onerror = function (e) {
-                console.error(xhr.statusText);
-            };
-            xhr.send(null);
+            zing.http.get(path + '.js', function (er, data) {
+                if (er)
+                    return console.error('Zing: error loading ' + tagName + '.js\n', data);
+                var tag = zing.TagEnvironment(zing.get('%' + eleGuid), eleGuid, env.$html, _removeComments(data));
+                env.tag = tag;
+                tag.start();
+                if(callback)
+                    callback();
+            });
+
             env.script = path + '.js';
         }
 
@@ -91,13 +78,17 @@
         return env;
     }
 
-    zing.stopTag = function (env) {
+    function stopTag (env) {
         env.tag.stop();
         zing.get('link').find(function (link) {
             if (link.href.includes(env.css))
                 link.parentElement.removeChild(link);
         });
-    };
+    }
 
-    zing.createTag = createTag;
-})();
+    zing.extend({
+        createTag: createTag,
+        stopTag: stopTag
+    });
+
+})(window.zing);
