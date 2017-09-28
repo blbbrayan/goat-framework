@@ -9,31 +9,34 @@
             }, 100);
 
         function parseExpression(exp) {
+            exp = exp || "";
             if (exp.includes("$:"))
                 return "";
             return exp.split('$$').join('$env.');
         }
 
+        function getUnderEnvBy(attr) {
+            return zing.filterByAttribute((zing.getUnderEnv($tag) || []), attr);
+        }
+
         //pre
         function $link() {
             $intervalfn.push(function () {
-                var ar = zing.getUnder($tag, '_link');
-                if (ar)
-                    ar.forEach(function (ele) {
-                        if (ele.innerText !== eval(parseExpression(ele.getAttribute('link'))))
-                            ele.innerText = eval(parseExpression(ele.getAttribute('link')));
-                    })
+                var ar = getUnderEnvBy('link');
+                ar.forEach(function (ele) {
+                    if (ele.innerText !== eval(parseExpression(ele.getAttribute('link'))))
+                        ele.innerText = eval(parseExpression(ele.getAttribute('link')));
+                })
             });
         }
 
         function $bind() {
             $intervalfn.push(function () {
-                var ar = zing.getUnder($tag, '_bind');
-                if (ar)
-                    ar.forEach(function (ele) {
-                        if ($env[ele.getAttribute('bind')] !== ele.value)
-                            $env[ele.getAttribute('bind')] = ele.value;
-                    })
+                var ar = getUnderEnvBy('bind');
+                ar.forEach(function (ele) {
+                    if ($env[ele.getAttribute('bind')] !== ele.value)
+                        $env[ele.getAttribute('bind')] = ele.value;
+                })
             });
         }
 
@@ -47,7 +50,7 @@
             }
 
             $intervalfn.push(function () {
-                var ar = zing.getUnder($tag, '_if') || [];
+                var ar = getUnderEnvBy('if');
                 ar.find(function (ele) {
                     if (!eval(parseExpression(ele.getAttribute('if')))) {
                         toTemplate(ele, parseExpression(ele.getAttribute('if')));
@@ -58,6 +61,7 @@
                     if (eval(template.fn)) {
                         template.temp.parentElement.replaceChild(template.ele, template.temp);
                         templates.splice(templates.indexOf(template), 1);
+                        update();
                     }
                 });
             })
@@ -83,7 +87,7 @@
             }
 
             $intervalfn.push(function () {
-                zing.getUnder($tag, '_for').forEach(function (ele) {
+                getUnderEnvBy('for').forEach(function (ele) {
                     var elemArray = ele.getAttribute('for').split(':'),
                         arrName = elemArray[0],
                         variableName = elemArray[1],
@@ -108,15 +112,19 @@
         }
 
         function handleClick(ele) {
-            eval(parseExpression(ele.target.getAttribute('click')));
+            //var $env = $env;
+            return function (event){
+                console.log('called', ele, ele.getAttribute('click'), parseExpression(ele.getAttribute('click')), $env);
+                eval(parseExpression(ele.getAttribute('click')));
+            }
         }
 
         //post
         function $click() {
-            var ar = zing.getUnder($tag, '_click') || [];
+            var ar = getUnderEnvBy('click');
             ar.forEach(function (ele) {
-                ele.removeEventListener('click', handleClick);
-                ele.addEventListener('click', handleClick);
+                ele.removeEventListener('click', handleClick(ele));
+                ele.addEventListener('click', handleClick(ele));
             });
         }
 

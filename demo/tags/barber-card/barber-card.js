@@ -1,2 +1,8 @@
 $env.barber = zing.cache('barber');
-console.log($env);
+
+
+$env.setUnd = function () {
+    console.log('setUnd called');
+    $env.barber = undefined;
+    console.log($env.barber);
+};

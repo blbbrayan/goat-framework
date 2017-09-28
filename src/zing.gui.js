@@ -19,15 +19,6 @@
                 return ar[0];
             return ar;
         },
-        each: function (selector, fn) {
-            var elements = get(selector);
-            elements.forEach(fn);
-            return elements;
-        },
-        forEach: function (elements, fn) {
-            elements.forEach(fn);
-            return elements;
-        },
         under: function (element) {
             return Array.from(element.children);
         },
@@ -58,6 +49,34 @@
                     return ele.tagName.toLowerCase() == selector;
                 });
             }
+        },
+        getUnderEnv: function (element) {
+            if (element) {
+                var ar = [],
+                    children = Array.from(element.children);
+
+                function getChildren() {
+                    var childAr = [];
+                    children.forEach(function (child) {
+                        child.hasAttribute('zing')
+                            ? children.splice(children.indexOf(child), 1)
+                            : childAr = childAr.concat(Array.from(child.children))
+                    });
+                    ar = ar.concat(children);
+                    children = childAr;
+                    if (children.length > 0)
+                        return getChildren();
+                    else
+                        return ar;
+                }
+
+                return getChildren();
+            }
+        },
+        filterByAttribute: function (ar, attr) {
+            return ar.filter(function (ele) {
+                return ele.hasAttribute(attr);
+            });
         }
     };
 

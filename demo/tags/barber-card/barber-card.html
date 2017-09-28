@@ -1,7 +1,6 @@
-<div class="card" if="$$barber">
-    <div class="card-content">
-        <span class="card-title" link="$$barber.name"></span>
-        <div link="$$barber.phone"></div>
-        <div link="$$barber.address"></div>
-    </div>
+<div class="card" if="$$barber" click="$$setUnd">
+    <div class="card-title" link="$$barber.name"></div>
+    <div link="$$barber.address"></div>
+    <div link="$$barber.phone"></div>
+    <button click="$$setUnd">hide</button>
 </div>
