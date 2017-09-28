@@ -112,9 +112,7 @@
         }
 
         function handleClick(ele) {
-            //var $env = $env;
             return function (event){
-                console.log('called', ele, ele.getAttribute('click'), parseExpression(ele.getAttribute('click')), $env);
                 eval(parseExpression(ele.getAttribute('click')));
             }
         }
