@@ -1,0 +1,29 @@
+.article-link{
+    padding: 15px 0 15px 15px;
+    transition: .25s;
+    cursor: pointer;
+}
+
+.article-link:hover{
+    background-color: rgba(0,0,0,0.02);
+}
+
+.article-text{
+    font-family: "Montserrat", sans-serif;
+    font-size: 120%;
+    white-space: pre-line;
+}
+
+@media screen and (min-width: 800px){
+    .for-mobile{
+        display: none;
+    }
+}
+@media screen and (max-width: 800px){
+    .not-mobile{
+        display: none;
+    }
+}
+#code{
+    font-family: monospace;
+}

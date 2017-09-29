@@ -1,0 +1,17 @@
+<div class="row">
+    <div class="card col-md-3 not-mobile">
+        <span class="card-title">Documentation</span>
+        <div class="article-link" for="articles:article" click="$$select($:article)" link="$:article.name"></div>
+    </div>
+    <div class="card col-xs-12 col-md-9" if="$$article">
+        <b><span class="card-title" link="$$article.name"></span></b>
+        <pre class="article-text" link="$$article.text"></pre>
+        <div class="code-container" if="$$article.example">
+            <pre id="code" link="$$article.example"></pre>
+        </div>
+    </div>
+    <div class="card col-xs-12 for-mobile">
+        <span class="card-title">Documentation</span>
+        <div class="article-link" for="articles:article" click="$$select($:article)" link="$:article.name"></div>
+    </div>
+</div>

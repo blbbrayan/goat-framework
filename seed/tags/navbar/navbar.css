@@ -1,0 +1,37 @@
+navbar nav{
+    height: 56px;
+    background: #afafea;
+    position: relative;
+    margin: -8px;
+    text-align: right;
+}
+
+navbar a{
+    height: 56px;
+    padding: 0 10px;
+    text-decoration: none;
+    line-height: 56px;
+    font-size: 1.3em;
+    font-weight: bold;
+    transition: color .3s;
+}
+
+navbar .link{
+    color: rgba(255, 255, 255, .8);
+}
+
+navbar .link:hover{
+    color: white;
+    font-size: 1.35em;
+}
+
+navbar .brand{
+    left: 0;
+    position: absolute;
+    font-size: 1.8em;
+    color: white;
+}
+
+navbar .active{
+    color: white;
+}
