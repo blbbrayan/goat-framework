@@ -1,6 +1,6 @@
 (function (zing) {
     zing.TagEnvironment = function ($tag, $guid, $html, $jstemplate) {
-        var $env = {},
+        var $env = {}, $private = {},
             $intervalfn = [],
             $interval = setInterval(function () {
                 $intervalfn.forEach(function (fn) {
@@ -120,9 +120,16 @@
         //post
         function $click() {
             var ar = getUnderEnvBy('click');
+            if($private.click)
+                $private.click.forEach(function (click) {
+                    if(click.ele)
+                        click.ele.removeEventListener('click', click.fn);
+                });
+            $private.click = [];
             ar.forEach(function (ele) {
-                ele.removeEventListener('click', handleClick(ele));
-                ele.addEventListener('click', handleClick(ele));
+                var fn = handleClick(ele);
+                ele.addEventListener('click', fn);
+                $private.click.push({fn: fn, ele: ele});
             });
         }
 
