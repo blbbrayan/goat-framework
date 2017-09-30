@@ -14,6 +14,6 @@
         address: "1600 Pennsylvania Ave NW, Washington, DC 20500"
     };
 
-    zing.cache('barber', barber);
+    zing.cache.add('barber', barber);
 
 })(window.zing);

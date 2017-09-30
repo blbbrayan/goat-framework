@@ -1,4 +1,4 @@
-$env.barber = zing.cache('barber');
+$env.barber = zing.cache.get('barber');
 
 
 $env.setUnd = function () {
