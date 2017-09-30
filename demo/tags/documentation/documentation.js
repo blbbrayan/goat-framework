@@ -16,16 +16,16 @@ function Article(name, text, example) {
 }
 
 function str(text) {
-    var link = {};
-    link.text = text;
-    link.chain = function (text) {
-        link.text += text;
-        return link;
-    };
-    link.finish = function () {
-        return link.text;
-    };
-    return link;
+    return  {
+        text: text,
+        chain: function (text) {
+            this.text += text;
+            return this;
+        },
+        finish: function () {
+            return this.text;
+        }
+    }
 }
 
 $env.select = function (article) {

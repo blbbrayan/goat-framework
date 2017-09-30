@@ -1,31 +1,24 @@
-$env = {};
-
-//init
-$env.todos = [
-    {title: 'Call dad...', desc: 'desc 1'},
-    {title: 'Say happy birthday...', desc: 'desc 2'},
-    {title: 'Mention Zing commit...', desc: 'desc 3'}
-];
-
-$env.codes = [
-    {type: "Javascript"},
-    {type: "Html"}
-];
-
-$env.todo = "";
-
-//functions
-$env.add = function () {
-    $env.todos.push({title:$env.todo+"", desc: ''});
-    zing.get('#todo').value = "";
-};
-
-$env.remove = function (todo) {
-    $env.todos.splice($env.todos.indexOf(todo), 1);
-};
-
-$env.setCode = function (i) {
-    $env.code = $env.codes[i];
+$env = {
+    todo: "",
+    todos: [
+        {title: 'Call dad...', desc: 'desc 1'},
+        {title: 'Say happy birthday...', desc: 'desc 2'},
+        {title: 'Mention Zing commit...', desc: 'desc 3'}
+    ],
+    codes: [
+        {type: "Javascript"},
+        {type: "Html"}
+    ],
+    add: function () {
+        this.todos.push({title:this.todo+"", desc: ''});
+        zing.get('#todo').value = "";
+    },
+    remove: function (todo) {
+        this.todos.splice(this.todos.indexOf(todo), 1);
+    },
+    setCode: function (i) {
+        this.code = this.codes[i];
+    }
 };
 
 function init () {
