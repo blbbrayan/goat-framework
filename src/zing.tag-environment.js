@@ -83,6 +83,8 @@
                 });
                 forEle.appendChild(clone);
                 clones.push(clone);
+                if(clone.hasAttribute('zing'))
+                    zing.createTag(clone.localName, clone);
                 update();
             }
 

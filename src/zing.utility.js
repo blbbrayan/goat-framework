@@ -8,7 +8,7 @@
         createElem: function(name) {
             document.createElement(name);
         }
-    }
+    };
 
     zing.extend({util: utilities});
 })(window.zing);
