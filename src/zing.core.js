@@ -92,8 +92,7 @@
     }, 100);
 
     function start() {
-        var items = zing.get("_zing") || [];
-        items.forEach(function (item) {
+        (zing.get("_zing") || []).forEach(function (item) {
             zing.createTag(item.localName, item);
         });
         zing.loadScript(zing.init, function () {});

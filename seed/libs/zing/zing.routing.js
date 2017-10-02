@@ -17,9 +17,14 @@
             var route = router.routes[url];
             // Do we have both a view and a route?
             if (router.el && route) {
-                if (router.currentTag)
+                var newEl = document.createElement(route);
+                if (router.currentTag){
                     zing.stopTag(router.currentTag);
-                router.currentTag = zing.createTag(route, router.el);
+                    var el = router.currentTag.tag.el;
+                    el.parentElement.replaceChild(newEl, el);
+                } else
+                    router.el.appendChild(newEl);
+                router.currentTag = zing.createTag(route, newEl);                
             }
         },
         start: function () {

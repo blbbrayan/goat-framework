@@ -80,10 +80,6 @@
 
     function stopTag (env) {
         env.tag.stop();
-        zing.get('link').find(function (link) {
-            if (link.href.includes(env.css))
-                link.parentElement.removeChild(link);
-        });
     }
 
     zing.extend({

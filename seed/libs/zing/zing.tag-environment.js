@@ -153,7 +153,8 @@
         return {
             start: start,
             update: update,
-            stop: stop
+            stop: stop,
+            el: $tag
         };
     }
 })(window.zing);

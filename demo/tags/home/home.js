@@ -3,11 +3,7 @@ $env.toDocs = function(){
 };
 
 $env.showBarberCard = function() {
-    $env.barber = zing.cache.get('barber');
-    console.log($env);
+    zing.broadcast('show-barber-card', zing.cache.get('barber'));
 };
 
-setTimeout(function(){
-    $env.barber = zing.cache.get('barber');
-    console.log($env);
-}, 500);
+$env.barbers = [0, 1, 2];
