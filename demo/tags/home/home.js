@@ -12,7 +12,7 @@ $env.clear = function () {
 
 $env.barbers = [0, 1, 2];
 
-var dataModule = $modules.data;
-
 console.log('modules', $modules);
-console.log(dataModule.getQuartiles(console.log));
+
+var dataModule = $modules.data;
+dataModule.getQuartiles(console.log);
