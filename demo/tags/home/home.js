@@ -10,7 +10,7 @@ $env.clear = function () {
     zing.events.broadcast('clear-barber');
 };
 
-$env.barbers = [0, 1, 2];
+$env.barbers = zing.snap('barbers').get();
 
 console.log('modules', $modules);
 

@@ -79,6 +79,7 @@
                 allEle.forEach(function (e) {
                     Array.from(e.attributes).forEach(function (attr) {
                         attr.value = attr.value.split('$:' + varName).join('$$' + arrName + '[' + i + ']');
+                        attr.value = attr.value.split('$index:').join(i);
                     });
                 });
                 forEle.appendChild(clone);
