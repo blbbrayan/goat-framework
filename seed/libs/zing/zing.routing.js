@@ -3,8 +3,8 @@
     var router = {
         currentTag: undefined,
         routes: {},
-        addRoute: function (path, tagName) {
-            zing.router.routes[path] = tagName
+        addRoute: function (path, tagName, modules) {
+            zing.router.routes[path] = {tagName: tagName, modules: modules}
         },
         el: null,
         load: function () {
@@ -17,14 +17,14 @@
             var route = router.routes[url];
             // Do we have both a view and a route?
             if (router.el && route) {
-                var newEl = document.createElement(route);
+                var newEl = document.createElement(route.tagName);
                 if (router.currentTag){
                     zing.stopTag(router.currentTag);
                     var el = router.currentTag.tag.el;
                     el.parentElement.replaceChild(newEl, el);
                 } else
                     router.el.appendChild(newEl);
-                router.currentTag = zing.createTag(route, newEl);                
+                router.currentTag = zing.createTag(route.tagName, newEl, route.modules);
             }
         },
         start: function () {

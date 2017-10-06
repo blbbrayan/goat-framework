@@ -1,4 +1,6 @@
-$env.barber = zing.cache.get('barber');
+zing.events.subscribe('show-barber-cards', function () {
+    $env.barber = zing.snap('barber').get();
+});
 
 $env.guid = function _generateGuid() {
     function s4() {
@@ -15,9 +17,3 @@ $env.setUnd = function () {
     console.log('setUnd called');
     $env.barber = undefined;
 };
-
-zing.subscribe('show-barber-card', function (barber) {
-    $env.barber = barber;
-});
-
-console.log($env.barber, $intervalfn);

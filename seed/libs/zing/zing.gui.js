@@ -6,7 +6,7 @@
                 return document.getElementById(selector.replace("#", ""));
 
             if (selector.includes("."))
-                return Array.from(document.getElementsByClassName(selector));
+                return Array.from(document.getElementsByClassName(selector.substr(1)));
 
             if (selector.includes("%"))
                 return Array.from(document.querySelectorAll("[data-gui-id='" + selector.substr(1) + "']"))[0];
@@ -50,7 +50,8 @@
                 });
             }
         },
-        getUnderEnv: function (element) {
+        getUnderEnv: function (element, includeZing) {
+            includeZing = includeZing || true;
             if (element) {
                 var ar = [],
                     children = Array.from(element.children);
@@ -58,9 +59,12 @@
                 function getChildren() {
                     var childAr = [];
                     children.forEach(function (child) {
-                        child.hasAttribute('zing')
-                            ? children.splice(children.indexOf(child), 1)
-                            : childAr = childAr.concat(Array.from(child.children))
+                        if(child.hasAttribute('zing')){
+                             children.splice(children.indexOf(child), 1);
+                            if(includeZing)
+                                ar.push(child);
+                        } else
+                            childAr = childAr.concat(Array.from(child.children))
                     });
                     ar = ar.concat(children);
                     children = childAr;

@@ -1,1 +1,1 @@
-$env.title = "Home";
+$env.title = $modules.data.title;

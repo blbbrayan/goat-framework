@@ -16,6 +16,6 @@
         }
     };
 
-    zing.extend(handler);
+    zing.extend({events: handler});
 
 })(window.zing);

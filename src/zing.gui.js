@@ -6,7 +6,7 @@
                 return document.getElementById(selector.replace("#", ""));
 
             if (selector.includes("."))
-                return Array.from(document.getElementsByClassName(selector));
+                return Array.from(document.getElementsByClassName(selector.substr(1)));
 
             if (selector.includes("%"))
                 return Array.from(document.querySelectorAll("[data-gui-id='" + selector.substr(1) + "']"))[0];

@@ -21,17 +21,18 @@
         "tag-environment"
     ];
     var engineScripts = [
-        "broadcast",
-        "cache",
+        "events",
         "gui",
+        "snap",
         "tag",
         "routing"
     ];
 
     var zing = {
         loaded: 0,
-        tagsDir: core['attributes']['tags-dir'].value,
+        tagDir: core['attributes']['tag-dir'].value,
         init: core['attributes']['init'].value,
+        moduleDir: core['attributes']['module-dir'].value,
         isLoaded: function (url) {
             return Array.from(document.getElementsByTagName("script")).find(function (script) {
                 return script.src === url
@@ -92,11 +93,10 @@
     }, 100);
 
     function start() {
-        var items = zing.get("_zing") || [];
-        items.forEach(function (item) {
+        (zing.get("_zing") || []).forEach(function (item) {
             zing.createTag(item.localName, item);
         });
-        zing.loadScript(zing.init, function () {});
+        zing.loadScript(zing.init);
     }
 
     global.zing = zing;

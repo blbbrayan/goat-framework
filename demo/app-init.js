@@ -1,9 +1,9 @@
 (function(zing){
 
-    zing.router.addRoute('/', 'home');
-    zing.router.addRoute('/home', 'home');
-    zing.router.addRoute('/todo', 'todo');
-    zing.router.addRoute('/documentation', 'documentation');
+    zing.router.addRoute('/', 'home', ['data']);
+    zing.router.addRoute('/home', 'home', ['data']);
+    zing.router.addRoute('/todo', 'todo', ['data']);
+    zing.router.addRoute('/documentation', 'documentation', ['data']);
 
     zing.router.start();
 
@@ -14,6 +14,12 @@
         address: "1600 Pennsylvania Ave NW, Washington, DC 20500"
     };
 
-    zing.cache.add('barber', barber);
+    setInterval(function () {
+        barber.name+='t';
+    }, 3000);
+
+    zing.events.subscribe('clear-barber', function () { barber.name = barber.name.split('t').join('') });
+
+    zing.snap('barber').watch(barber);
 
 })(window.zing);

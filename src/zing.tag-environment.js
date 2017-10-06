@@ -1,5 +1,5 @@
 (function (zing) {
-    zing.TagEnvironment = function ($tag, $guid, $html, $jstemplate) {
+    zing.TagEnvironment = function ($tag, $guid, $html, $jstemplate, $modules) {
         var $env = {}, $private = {},
             $intervalfn = [],
             $interval = setInterval(function () {
