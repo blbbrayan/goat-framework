@@ -96,7 +96,10 @@
                 loadCSS();
                 loadModules(loadScript);
                 zing.getUnder(ele, "_zing").forEach(function (e) {
-                    createTag(e.localName, e);
+                    var modules = e.getAttribute('zing') || [];
+                    if(typeof modules === "string")
+                        modules = modules.split(',');
+                    createTag(e.localName, e, modules);
                 });
                 item.parentNode.removeChild(item);
             };

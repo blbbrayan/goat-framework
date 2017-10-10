@@ -1,3 +1,5 @@
+var dataModule = $modules.data;
+
 $env.toDocs = function(){
     window.open('#/documentation', '_self');
 };
@@ -7,12 +9,10 @@ $env.showBarberCard = function() {
 };
 
 $env.clear = function () {
-    zing.events.broadcast('clear-barber');
+    dataModule.clearBarbers();
 };
 
-$env.barbers = zing.snap('barbers').get();
+$env.barbers = dataModule.barbers;
 
 console.log('modules', $modules);
 
-var dataModule = $modules.data;
-dataModule.getQuartiles(console.log);

@@ -1,9 +1,10 @@
 var barberIndex = $tag.getAttribute('display');
 
-$env.barber = zing.snap('barbers').get()[barberIndex];
+console.log('barber-card', barberIndex, $modules.data);
+$env.barber = $modules.data.barbers[barberIndex];
+
 zing.events.subscribe('show-barber-cards', function () {
-    $env.barber = zing.snap('barbers').get()[barberIndex];
-    console.log($env.barber);
+    $env.barber = $modules.data.barbers[barberIndex];
 });
 
 $env.setUnd = function () {

@@ -1,18 +1,32 @@
-function _handleError(er){
-    if(er)
-        console.error(er);
-    return er === undefined;
+//barber info
+var barbers = [{
+    name: "Joseph",
+    phone: "678-999-8212",
+    address: "1600 Pennsylvania Ave NW, Washington, DC 20500"
+}, {
+    name: "Chuck",
+    phone: "678-999-8212",
+    address: "1600 Pennsylvania Ave NW, Washington, DC 20500"
+}, {
+    name: "Dave",
+    phone: "678-999-8212",
+    address: "1600 Pennsylvania Ave NW, Washington, DC 20500"
+}];
+
+function clearBarbers () {
+    barbers.forEach(function (barber) {
+        barber.name = barber.name.split('t').join('')
+    })
 }
 
-function getQuartiles(callback){
-    zing.http.get('assets/data.json', function(er, data){
-        if(_handleError(er))
-            callback(JSON.parse(data));
-    });
-}
+setInterval(function () {
+    barbers.forEach(function (barber) {
+        barber.name += 't';
+    })
+}, 3000);
 
 //module is the returned object
 module = {
-    title: "Home",
-    getQuartiles: getQuartiles
+    barbers: barbers,
+    clearBarbers: clearBarbers
 };

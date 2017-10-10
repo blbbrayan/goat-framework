@@ -10,7 +10,7 @@
 
         function parseExpression(exp) {
             exp = exp || "";
-            if (exp.includes("$:"))
+            if (exp.includes("$:") || exp.includes('$index:'))
                 return "";
             return exp.split('$$').join('$env.');
         }
@@ -84,8 +84,12 @@
                 });
                 forEle.appendChild(clone);
                 clones.push(clone);
-                if(clone.hasAttribute('zing'))
-                    zing.createTag(clone.localName, clone);
+                if(clone.hasAttribute('zing')) {
+                    var modules = clone.getAttribute('zing') || [];
+                    if(typeof modules === "string")
+                        modules = modules.split(',');
+                    zing.createTag(clone.localName, clone, modules);
+                }
                 update();
             }
 

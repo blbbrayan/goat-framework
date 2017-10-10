@@ -23,7 +23,6 @@
     var engineScripts = [
         "events",
         "gui",
-        "snap",
         "tag",
         "routing"
     ];

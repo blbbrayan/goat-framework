@@ -23,9 +23,10 @@
             zing.http.get(zing.moduleDir + '/' + moduleName + '.js', function (er, data) {
                 var fn = '(function(){ var module; ' + _removeComments(data) + ' return module;})()';
                 _modules[moduleName] = eval(fn);
+                callback();
             });
-        }
-        callback();
+        } else
+            callback();
     }
 
     function createTag(tagName, ele, modules, callback) {
@@ -62,10 +63,12 @@
         function loadModules(callback) {
             var i = 0;
             modules.forEach(function (module) {
-                _loadModule(module, function () {i++});
+                _loadModule(module, function () {
+                    i++
+                });
             });
             var interval = setInterval(function () {
-                if(i === modules.length){
+                if (i === modules.length) {
                     clearInterval(interval);
                     callback();
                 }
@@ -93,7 +96,10 @@
                 loadCSS();
                 loadModules(loadScript);
                 zing.getUnder(ele, "_zing").forEach(function (e) {
-                    createTag(e.localName, e);
+                    var modules = e.getAttribute('zing') || [];
+                    if(typeof modules === "string")
+                        modules = modules.split(',');
+                    createTag(e.localName, e, modules);
                 });
                 item.parentNode.removeChild(item);
             };
