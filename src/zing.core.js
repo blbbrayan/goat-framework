@@ -28,6 +28,7 @@
     ];
 
     var zing = {
+        showLog: true,
         loaded: 0,
         tagDir: core['attributes']['tag-dir'].value,
         init: core['attributes']['init'].value,
@@ -62,6 +63,11 @@
 
                 // Fire the loading
                 head.appendChild(script);
+            }
+        },
+        log: function(title, msg) {
+            if (this.showLog) {
+                console.log(title, msg);
             }
         }
     };
