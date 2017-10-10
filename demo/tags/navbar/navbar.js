@@ -1,6 +1,6 @@
 //looks for an active anchor tag
 function setActive (){
-    var list = zing.getUnder($tag, '.link');
+    var list = goat.getUnder($tag, '.link');
     var url = location.hash || '/';
 
     list.forEach(function (ele){

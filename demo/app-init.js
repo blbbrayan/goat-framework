@@ -1,10 +1,10 @@
-(function (zing) {
+(function (goat) {
 
-    zing.router.addRoute('/', 'home', ['data']);
-    zing.router.addRoute('/home', 'home', ['data']);
-    zing.router.addRoute('/todo', 'todo', ['data']);
-    zing.router.addRoute('/documentation', 'documentation', ['data']);
+    goat.router.addRoute('/', 'home', ['data']);
+    goat.router.addRoute('/home', 'home', ['data']);
+    goat.router.addRoute('/todo', 'todo', ['data']);
+    goat.router.addRoute('/documentation', 'documentation', ['data']);
 
-    zing.router.start();
+    goat.router.start();
 
-})(window.zing);
+})(window.goat);

@@ -5,7 +5,7 @@ $env.toDocs = function(){
 };
 
 $env.showBarberCard = function() {
-    zing.events.broadcast('show-barber-cards');
+    goat.events.broadcast('show-barber-cards');
 };
 
 $env.clear = function () {
@@ -13,6 +13,3 @@ $env.clear = function () {
 };
 
 $env.barbers = dataModule.barbers;
-
-console.log('modules', $modules);
-

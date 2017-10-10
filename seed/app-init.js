@@ -1,9 +1,9 @@
-(function(zing){
+(function(goat){
 
-    zing.router.addRoute('/', 'home', ["data"]);
-    zing.router.addRoute('/home', 'home');
-    zing.router.addRoute('/other', 'other');
+    goat.router.addRoute('/', 'home', ["data"]);
+    goat.router.addRoute('/home', 'home');
+    goat.router.addRoute('/other', 'other');
 
-    zing.router.start();
+    goat.router.start();
 
-})(window.zing);
+})(window.goat);

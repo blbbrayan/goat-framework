@@ -44,7 +44,7 @@ $env.articles = [
     ), new Article(
         '$env - html',
         str("To use your tag's $env variables on the DOM simply use $$variableName, or $env.variableName.\n")
-            .chain('As of now, you can only use them in Zing attributes.')
+            .chain('As of now, you can only use them in goat attributes.')
             .finish(),
         str('<h1 link="$$value"></h1>\n')
             .chain('<button click="$$alert()">Click Me</button>')
@@ -67,7 +67,7 @@ $env.articles = [
         str("The click attribute will add a click event listener")
             .finish(),
         str('<button click="$$alert()">Click Me</button>\n')
-            .chain('<button click="console.log(\'Zing is cool\')">Zing</button>')
+            .chain('<button click="console.log(\'goat is cool\')">goat</button>')
             .finish()
     ), new Article(
         'If',
