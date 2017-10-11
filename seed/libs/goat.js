@@ -1,24 +1,21 @@
-(function (global){
-
+(function (global) {
 
     /*
-        CORE
+     CORE
      */
-
-    //object extender for other goat methods
-    Object.prototype.extend = function (obj) {
-        for (var i in obj) {
-            if (obj.hasOwnProperty(i)) {
-                this[i] = obj[i];
-            }
-        }
-    };
 
     var core = Array.from(document.getElementsByTagName("script")).find(function (script) {
         return script.src.includes('goat.js');
     });
 
     var goat = {
+        extend: function (obj) {
+            for (var i in obj) {
+                if (obj.hasOwnProperty(i)) {
+                    this[i] = obj[i];
+                }
+            }
+        },
         showLog: true,
         loaded: 0,
         tagDir: core['attributes']['tag-dir'].value,
@@ -56,7 +53,7 @@
                 head.appendChild(script);
             }
         },
-        log: function(title, msg) {
+        log: function (title, msg) {
             if (this.showLog) {
                 console.log(title, msg);
             }
@@ -64,7 +61,7 @@
     };
 
     /*
-        HTTP
+     HTTP
      */
 
     var http = {
@@ -90,7 +87,7 @@
     goat.extend({http: http});
 
     /*
-        TAG ENVIRONMENT
+     TAG ENVIRONMENT
      */
 
     goat.TagEnvironment = function ($tag, $guid, $html, $jstemplate, $modules) {
@@ -178,9 +175,9 @@
                 });
                 forEle.appendChild(clone);
                 clones.push(clone);
-                if(clone.hasAttribute('goat')) {
+                if (clone.hasAttribute('goat')) {
                     var modules = clone.getAttribute('goat') || [];
-                    if(typeof modules === "string")
+                    if (typeof modules === "string")
                         modules = modules.split(',');
                     goat.createTag(clone.localName, clone, modules);
                 }
@@ -213,7 +210,7 @@
         }
 
         function handleClick(ele) {
-            return function (event){
+            return function (event) {
                 eval(parseExpression(ele.getAttribute('click')));
             }
         }
@@ -221,9 +218,9 @@
         //post
         function $click() {
             var ar = getUnderEnvBy('click');
-            if($private.click)
+            if ($private.click)
                 $private.click.forEach(function (click) {
-                    if(click.ele)
+                    if (click.ele)
                         click.ele.removeEventListener('click', click.fn);
                 });
             $private.click = [];
@@ -260,20 +257,20 @@
     };
 
     /*
-        EVENTS
+     EVENTS
      */
 
     var subscriptions = {};
     var handler = {
         broadcast: function (name, obj) {
-            if(!subscriptions[name])
+            if (!subscriptions[name])
                 subscriptions[name] = [];
-            subscriptions[name].forEach(function (on){
+            subscriptions[name].forEach(function (on) {
                 on(obj);
             });
         },
-        subscribe: function (name, on){
-            if(!subscriptions[name])
+        subscribe: function (name, on) {
+            if (!subscriptions[name])
                 subscriptions[name] = [];
             subscriptions[name].push(on);
         }
@@ -282,7 +279,7 @@
     goat.extend({events: handler});
 
     /*
-        GUI
+     GUI
      */
 
     var gui = {
@@ -344,9 +341,9 @@
                 function getChildren() {
                     var childAr = [];
                     children.forEach(function (child) {
-                        if(child.hasAttribute('goat')){
+                        if (child.hasAttribute('goat')) {
                             children.splice(children.indexOf(child), 1);
-                            if(includegoat)
+                            if (includegoat)
                                 ar.push(child);
                         } else
                             childAr = childAr.concat(Array.from(child.children))
@@ -372,7 +369,7 @@
     goat.extend(gui);
 
     /*
-        TAG
+     TAG
      */
 
     var _modules = {};
@@ -472,7 +469,7 @@
                 loadModules(loadScript);
                 goat.getUnder(ele, "_goat").forEach(function (e) {
                     var modules = e.getAttribute('goat') || [];
-                    if(typeof modules === "string")
+                    if (typeof modules === "string")
                         modules = modules.split(',');
                     createTag(e.localName, e, modules);
                 });
@@ -501,7 +498,7 @@
     });
 
     /*
-        ROUTING
+     ROUTING
      */
 
     var router = {
@@ -522,7 +519,7 @@
             // Do we have both a view and a route?
             if (router.el && route) {
                 var newEl = document.createElement(route.tagName);
-                if (router.currentTag){
+                if (router.currentTag) {
                     goat.stopTag(router.currentTag);
                     var el = router.currentTag.tag.el;
                     el.parentElement.replaceChild(newEl, el);
@@ -541,7 +538,7 @@
     goat.extend({router: router});
 
     /*
-        START
+     START
      */
 
     function start() {
@@ -551,7 +548,7 @@
         goat.loadScript(goat.init);
     }
 
-    window.onload = start;
+    window.addEventListener('load', start);
 
     global.goat = goat;
 

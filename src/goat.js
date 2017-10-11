@@ -1,6 +1,5 @@
 (function (global){
 
-
     /*
         CORE
      */
@@ -551,7 +550,7 @@
         goat.loadScript(goat.init);
     }
 
-    window.onload = start;
+    window.addEventListener('load', start);
 
     global.goat = goat;
 
