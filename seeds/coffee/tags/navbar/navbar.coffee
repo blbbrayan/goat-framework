@@ -1,5 +1,5 @@
 #looks for an active anchor tag
-setActive () ->
+setActive = () ->
   list = goat.getUnder($tag, '.link')
   url = location.hash || '/'
   list.forEach( (ele) ->

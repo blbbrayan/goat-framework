@@ -1,0 +1,1 @@
+!function(t){t.router.addRoute("/","home",["data"]),t.router.addRoute("/home","home",["data"]),t.router.addRoute("/other","other",["data"]),t.router.start()}(window.goat);

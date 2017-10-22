@@ -395,6 +395,7 @@
             goat.http.get(goat.moduleDir + '/' + moduleName + '.js', function (er, data) {
                 var fn = '(function(){ var module; ' + _removeComments(data) + ' return module;})()';
                 _modules[moduleName] = eval(fn);
+                goat.log(moduleName, 'loaded');
                 callback();
             });
         } else

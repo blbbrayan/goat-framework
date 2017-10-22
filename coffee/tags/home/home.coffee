@@ -1,1 +1,0 @@
-$env.title = $modules.data.title
