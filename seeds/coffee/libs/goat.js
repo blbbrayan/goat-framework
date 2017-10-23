@@ -1,1 +1,590 @@
-!function(global){function _removeComments(e){return e.replace("(/*([^*]|[\r\n]|(*+([^*/]|[\r\n])))**+/)|(//.*)")}function _generateGuid(){function e(){return Math.floor(65536*(1+Math.random())).toString(16).substring(1)}return e()+e()+"-"+e()+"-"+e()+"-"+e()+"-"+e()+e()+e()}function _loadModule(moduleName,callback){var module=_modules[moduleName];void 0===module?goat.http.get(goat.moduleDir+"/"+moduleName+".js",function(er,data){var fn="(function(){ var module; "+_removeComments(data)+" return module;})()";_modules[moduleName]=eval(fn),callback()}):callback()}function createTag(e,t,n,r){function a(){var e=document.createElement("link");e.rel="stylesheet",e.type="text/css",e.href=u+".css",t.appendChild(e),l.css=u+".css"}function o(e){var t=0;n.forEach(function(e){_loadModule(e,function(){t++})});var r=setInterval(function(){t===n.length&&(clearInterval(r),e())})}function i(){goat.http.get(u+".js",function(t,n){if(t)return console.error("goat: error loading "+e+".js\n",n);var a=goat.TagEnvironment(goat.get("%"+c),c,l.$html,_removeComments(n),_modules);l.tag=a,a.start(),r&&r()}),l.script=u+".js"}n=n||[];var l={};t instanceof HTMLElement||(t=t||window.event,t=t.target);var u=goat.tagDir+"/"+e+"/"+e,c=_generateGuid();return t.dataset.guiId=c,function(e){goat.http.get(u+".html",function(n,r){l.$html=(t.innerHTML+"").replace(/\r?\n|\r/g),t.innerHTML=r,e()}),l.template=u+".html"}(function(){var e=document.createElement("img");e.src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7",e.onload=function(){a(),o(i),goat.getUnder(t,"_goat").forEach(function(e){var t=e.getAttribute("goat")||[];"string"==typeof t&&(t=t.split(",")),createTag(e.localName,e,t)}),e.parentNode.removeChild(e)},t.appendChild(e)}),l}function stopTag(e){e.tag.stop()}function stopModule(e){delete _modules[e]}function start(){(goat.get("_goat")||[]).forEach(function(e){goat.createTag(e.localName,e)}),goat.loadScript(goat.init)}var core=Array.from(document.getElementsByTagName("script")).find(function(e){return e.src.includes("goat.js")}),goat={extend:function(e){for(var t in e)e.hasOwnProperty(t)&&(this[t]=e[t])},showLog:!0,loaded:0,tagDir:core.attributes["tag-dir"].value,init:core.attributes.init.value,moduleDir:core.attributes["module-dir"].value,isLoaded:function(e){return void 0!==Array.from(document.getElementsByTagName("script")).find(function(t){return t.src===e})},loadScript:function(e,t){if(this.isLoaded(e))t();else{var n=document.getElementsByTagName("head")[0],r=document.createElement("script");r.type="text/javascript",r.src=e,r.onreadystatechange=function(){t&&t(),goat.loaded++},r.onload=function(){t&&t(),goat.loaded++},n.appendChild(r)}},log:function(e,t){this.showLog&&console.log(e,t)}},http={get:function(e,t){var n=new XMLHttpRequest;n.open("GET",e,!0),n.onload=function(e){4===n.readyState&&(200===n.status?t(void 0,n.responseText):t(n.statusText))},n.onerror=function(e){t(n.statusText)},n.send(null)}};goat.extend({http:http}),goat.TagEnvironment=function($tag,$guid,$html,$jstemplate,$modules){function parseExpression(e){return(e=e||"").includes("$:")||e.includes("$index:")?"":e.split("$$").join("$env.")}function getUnderEnvBy(e){return goat.filterByAttribute(goat.getUnderEnv($tag)||[],e)}function $link(){$intervalfn.push(function(){var ar=getUnderEnvBy("link");ar.forEach(function(ele){ele.innerText!==eval(parseExpression(ele.getAttribute("link")))&&(ele.innerText=eval(parseExpression(ele.getAttribute("link"))))})})}function $bind(){$intervalfn.push(function(){getUnderEnvBy("bind").forEach(function(e){$env[e.getAttribute("bind")]!==e.value&&($env[e.getAttribute("bind")]=e.value)})})}function $if(){function toTemplate(e,t){var n=document.createElement("if");templates.push({temp:n,ele:e,fn:t}),e.parentElement.replaceChild(n,e)}var templates=[];$intervalfn.push(function(){var ar=getUnderEnvBy("if");ar.find(function(ele){if(!eval(parseExpression(ele.getAttribute("if"))))return toTemplate(ele,parseExpression(ele.getAttribute("if"))),!0}),templates.forEach(function(template){eval(template.fn)&&(template.temp.parentElement.replaceChild(template.ele,template.temp),templates.splice(templates.indexOf(template),1),update())})})}function $for(){function e(e,t,n,r,a,o){var i=e.cloneNode(!0);i.removeAttribute("for");var l=goat.allUnder(i);if(l.push(i),l.forEach(function(e){Array.from(e.attributes).forEach(function(e){e.value=e.value.split("$:"+n).join("$$"+r+"["+a+"]"),e.value=e.value.split("$index:").join(a)})}),t.appendChild(i),o.push(i),i.hasAttribute("goat")){var u=i.getAttribute("goat")||[];"string"==typeof u&&(u=u.split(",")),goat.createTag(i.localName,i,u)}update()}var t=[];$intervalfn.push(function(){getUnderEnvBy("for").forEach(function(e){var n=e.getAttribute("for").split(":"),r=n[0],a=n[1],o=document.createElement("for");e.parentElement.replaceChild(o,e),t.push({ele:e,forEle:o,arrName:r,varName:a,clones:[]})}),t.forEach(function(t){var n=$env[t.arrName];if(n){for(;t.clones.length<n.length;)e(t.ele,t.forEle,t.varName,t.arrName,t.clones.length,t.clones);for(;t.clones.length>n.length;){var r=t.clones[t.clones.length-1];t.clones.splice(t.clones.indexOf(r),1),r.remove()}}})})}function handleClick(ele){return function(event){eval(parseExpression(ele.getAttribute("click")))}}function $click(){var e=getUnderEnvBy("click");$private.click&&$private.click.forEach(function(e){e.ele&&e.ele.removeEventListener("click",e.fn)}),$private.click=[],e.forEach(function(e){var t=handleClick(e);e.addEventListener("click",t),$private.click.push({fn:t,ele:e})})}function update(){$click()}function start(){$for(),$if(),$link(),$bind(),eval($jstemplate),update()}function stop(){clearInterval($interval)}var $env={},$private={},$intervalfn=[],$interval=setInterval(function(){$intervalfn.forEach(function(e){e()})},100);return{start:start,update:update,stop:stop,el:$tag}};var subscriptions={},handler={broadcast:function(e,t){subscriptions[e]||(subscriptions[e]=[]),subscriptions[e].forEach(function(e){e(t)})},subscribe:function(e,t){subscriptions[e]||(subscriptions[e]=[]),subscriptions[e].push(t)}};goat.extend({events:handler});var gui={get:function(e){if(e.includes("#"))return document.getElementById(e.replace("#",""));if(e.includes("."))return Array.from(document.getElementsByClassName(e.substr(1)));if(e.includes("%"))return Array.from(document.querySelectorAll("[data-gui-id='"+e.substr(1)+"']"))[0];if(e.includes("_"))return Array.from(document.querySelectorAll("["+e.substr(1)+"]"));var t=Array.from(document.getElementsByTagName(e));return 1===t.length?t[0]:t},under:function(e){return Array.from(e.children)},allUnder:function(e){return Array.from(e.querySelectorAll("*"))},getUnder:function(e,t,n){if(e){var r=n?this.under(e):this.allUnder(e),a=t.substr(0,1),o=t.substr(1);return"#"===a?r.find(function(e){return e.id===o}):"."===a?r.filter(function(e){return e.className.includes(o)}):"%"===a?r.find(function(e){return e.dataset["gui-id"]===o}):"_"===a?Array.from(e.querySelectorAll("["+t.substr(1)+"]")):r.filter(function(e){return e.tagName.toLowerCase()==t})}},getUnderEnv:function(e,t){function n(){var e=[];return a.forEach(function(n){n.hasAttribute("goat")?(a.splice(a.indexOf(n),1),t&&r.push(n)):e=e.concat(Array.from(n.children))}),r=r.concat(a),(a=e).length>0?n():r}if(t=t||!0,e){var r=[],a=Array.from(e.children);return n()}},filterByAttribute:function(e,t){return e.filter(function(e){return e.hasAttribute(t)})}};goat.extend(gui);var _modules={};goat.extend({createTag:createTag,stopTag:stopTag,stopModule:stopModule});var router={currentTag:void 0,routes:{},addRoute:function(e,t,n){goat.router.routes[e]={tagName:t,modules:n}},el:null,load:function(){var e=goat.router;e.el=e.el||goat.get("router");var t=location.hash.slice(1)||"/",n=e.routes[t];if(e.el&&n){var r=document.createElement(n.tagName);if(e.currentTag){goat.stopTag(e.currentTag);var a=e.currentTag.tag.el;a.parentElement.replaceChild(r,a)}else e.el.appendChild(r);e.currentTag=goat.createTag(n.tagName,r,n.modules)}},start:function(){window.addEventListener("hashchange",goat.router.load),window.addEventListener("load",goat.router.load),goat.router.load()}};goat.extend({router:router}),window.addEventListener("load",start),global.goat=goat}(window);
+(function (global) {
+
+    /*
+     CORE
+     */
+
+    var core = Array.from(document.getElementsByTagName("script")).find(function (script) {
+        return script.src.includes('goat.js');
+    });
+
+    var goat = {
+        extend: function (obj) {
+            for (var i in obj) {
+                if (obj.hasOwnProperty(i)) {
+                    this[i] = obj[i];
+                }
+            }
+        },
+        showLog: true,
+        loaded: 0,
+        tagDir: core['attributes']['tag-dir'].value,
+        init: core['attributes']['init'].value,
+        moduleDir: core['attributes']['module-dir'].value,
+        isLoaded: function (url) {
+            return Array.from(document.getElementsByTagName("script")).find(function (script) {
+                    return script.src === url
+                }) !== undefined;
+        },
+        loadScript: function (url, callback) {
+            if (this.isLoaded(url))
+                callback();
+            else {
+                // Adding the script tag to the head as suggested before
+                var head = document.getElementsByTagName('head')[0];
+                var script = document.createElement('script');
+                script.type = 'text/javascript';
+                script.src = url;
+
+                // Then bind the event to the callback function.
+                // There are several events for cross browser compatibility.
+                script.onreadystatechange = function () {
+                    if (callback)
+                        callback();
+                    goat.loaded++;
+                };
+                script.onload = function () {
+                    if (callback)
+                        callback();
+                    goat.loaded++;
+                };
+
+                // Fire the loading
+                head.appendChild(script);
+            }
+        },
+        log: function (title, msg) {
+            if (this.showLog) {
+                console.log(title, msg);
+            }
+        }
+    };
+
+    /*
+     HTTP
+     */
+
+    var http = {
+        get: function (url, callback) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", url, true);
+            xhr.onload = function (e) {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        callback(undefined, xhr.responseText);
+                    } else {
+                        callback(xhr.statusText);
+                    }
+                }
+            };
+            xhr.onerror = function (e) {
+                callback(xhr.statusText);
+            };
+            xhr.send(null);
+        }
+    };
+
+    goat.extend({http: http});
+
+    /*
+     TAG ENVIRONMENT
+     */
+
+    goat.TagEnvironment = function ($tag, $guid, $html, $jstemplate, $modules, $req) {
+        var $env = {}, $private = {},
+            $intervalfn = [],
+            $interval = setInterval(function () {
+                $intervalfn.forEach(function (fn) {
+                    fn()
+                })
+            }, 100);
+
+        function parseExpression(exp) {
+            exp = exp || "";
+            if (exp.includes("$:") || exp.includes('$index:'))
+                return "";
+            return exp.split('$$').join('$env.');
+        }
+
+        function getUnderEnvBy(attr) {
+            return goat.filterByAttribute((goat.getUnderEnv($tag) || []), attr);
+        }
+
+        //pre
+        function $link() {
+            $intervalfn.push(function () {
+                var ar = getUnderEnvBy('link');
+                ar.forEach(function (ele) {
+                    if (ele.innerText !== eval(parseExpression(ele.getAttribute('link'))))
+                        ele.innerText = eval(parseExpression(ele.getAttribute('link')));
+                })
+            });
+        }
+
+        function $bind() {
+            $intervalfn.push(function () {
+                var ar = getUnderEnvBy('bind');
+                ar.forEach(function (ele) {
+                    if ($env[ele.getAttribute('bind')] !== ele.value)
+                        $env[ele.getAttribute('bind')] = ele.value;
+                })
+            });
+        }
+
+        function $if() {
+            var templates = [];
+
+            function toTemplate(ele, fn) {
+                var temp = document.createElement('if');
+                templates.push({temp: temp, ele: ele, fn: fn});
+                ele.parentElement.replaceChild(temp, ele);
+            }
+
+            $intervalfn.push(function () {
+                var ar = getUnderEnvBy('if');
+                ar.find(function (ele) {
+                    if (!eval(parseExpression(ele.getAttribute('if')))) {
+                        toTemplate(ele, parseExpression(ele.getAttribute('if')));
+                        return true;
+                    }
+                });
+                templates.forEach(function (template) {
+                    if (eval(template.fn)) {
+                        template.temp.parentElement.replaceChild(template.ele, template.temp);
+                        templates.splice(templates.indexOf(template), 1);
+                        update();
+                    }
+                });
+            })
+        }
+
+        function $for() {
+
+            var watchers = [];
+
+            function createClone(ele, forEle, varName, arrName, i, clones) {
+                var clone = ele.cloneNode(true);
+                clone.removeAttribute('for');
+                var allEle = goat.allUnder(clone);
+                allEle.push(clone);
+                allEle.forEach(function (e) {
+                    Array.from(e.attributes).forEach(function (attr) {
+                        attr.value = attr.value.split('$:' + varName).join('$$' + arrName + '[' + i + ']');
+                        attr.value = attr.value.split('$index:').join(i);
+                    });
+                });
+                forEle.appendChild(clone);
+                clones.push(clone);
+                if (clone.hasAttribute('goat')) {
+                    var modules = clone.getAttribute('goat') || [];
+                    if (typeof modules === "string")
+                        modules = modules.split(',');
+
+                    var req = clone.getAttribute('req') || [];
+                    var $req = {};
+                    if (typeof req === "string")
+                        req = req.split(',');
+                    req.forEach(function (requirement){
+                       var pre = requirement.substr(0, 2);
+                       var name = requirement.substr(2);
+                       if(pre === "$$") {
+                           if(name === arrName+'['+i+']')
+                               $req[varName] = $env[arrName][i];
+                           else
+                               $req[name] = $env[name];
+                       }
+                    });
+
+                    goat.createTag(clone.localName, clone, modules, $req);
+                }
+                update();
+            }
+
+            $intervalfn.push(function () {
+                getUnderEnvBy('for').forEach(function (ele) {
+                    var elemArray = ele.getAttribute('for').split(':'),
+                        arrName = elemArray[0],
+                        variableName = elemArray[1],
+                        forEle = document.createElement('for');
+                    ele.parentElement.replaceChild(forEle, ele);
+
+                    watchers.push({ele: ele, forEle: forEle, arrName: arrName, varName: variableName, clones: []});
+                });
+                watchers.forEach(function (watcher) {
+                    var ar = $env[watcher.arrName];
+                    if (ar) {
+                        while (watcher.clones.length < ar.length)
+                            createClone(watcher.ele, watcher.forEle, watcher.varName, watcher.arrName, watcher.clones.length, watcher.clones);
+                        while (watcher.clones.length > ar.length) {
+                            var target = watcher.clones[watcher.clones.length - 1];
+                            watcher.clones.splice(watcher.clones.indexOf(target), 1);
+                            target.remove();
+                        }
+                    }
+                });
+            });
+        }
+
+        function handleClick(ele) {
+            return function (event) {
+                eval(parseExpression(ele.getAttribute('click')));
+            }
+        }
+
+        //post
+        function $click() {
+            var ar = getUnderEnvBy('click');
+            if ($private.click)
+                $private.click.forEach(function (click) {
+                    if (click.ele)
+                        click.ele.removeEventListener('click', click.fn);
+                });
+            $private.click = [];
+            ar.forEach(function (ele) {
+                var fn = handleClick(ele);
+                ele.addEventListener('click', fn);
+                $private.click.push({fn: fn, ele: ele});
+            });
+        }
+
+        function update() {
+            $click();
+        }
+
+        function start() {
+            $for();
+            $if();
+            $link();
+            $bind();
+            eval($jstemplate);
+            update();
+        }
+
+        function stop() {
+            clearInterval($interval);
+        }
+
+        return {
+            start: start,
+            update: update,
+            stop: stop,
+            el: $tag
+        };
+    };
+
+    /*
+     EVENTS
+     */
+
+    var subscriptions = {};
+    var handler = {
+        broadcast: function (name, obj) {
+            if (!subscriptions[name])
+                subscriptions[name] = [];
+            subscriptions[name].forEach(function (on) {
+                on(obj);
+            });
+        },
+        subscribe: function (name, on) {
+            if (!subscriptions[name])
+                subscriptions[name] = [];
+            subscriptions[name].push(on);
+        }
+    };
+
+    goat.extend({events: handler});
+
+    /*
+     GUI
+     */
+
+    var gui = {
+        get: function (selector) {
+            if (selector.includes("#"))
+                return document.getElementById(selector.replace("#", ""));
+
+            if (selector.includes("."))
+                return Array.from(document.getElementsByClassName(selector.substr(1)));
+
+            if (selector.includes("%"))
+                return Array.from(document.querySelectorAll("[data-gui-id='" + selector.substr(1) + "']"))[0];
+
+            if (selector.includes("_"))
+                return Array.from(document.querySelectorAll("[" + selector.substr(1) + "]"));
+
+            var ar = Array.from(document.getElementsByTagName(selector));
+            if (ar.length === 1)
+                return ar[0];
+            return ar;
+        },
+        under: function (element) {
+            return Array.from(element.children);
+        },
+        allUnder: function (element) {
+            return Array.from(element.querySelectorAll('*'));
+        },
+        getUnder: function (element, selector, strict) {
+            if (element) {
+                var elements = strict ? this.under(element) : this.allUnder(element),
+                    specialChar = selector.substr(0, 1),
+                    item = selector.substr(1);
+                if (specialChar === "#")
+                    return elements.find(function (ele) {
+                        return ele.id === item;
+                    });
+                if (specialChar === ".")
+                    return elements.filter(function (ele) {
+                        return ele.className.includes(item);
+                    });
+                if (specialChar === "%")
+                    return elements.find(function (ele) {
+                        return ele.dataset["gui-id"] === item;
+                    });
+                if (specialChar === "_")
+                    return Array.from(element.querySelectorAll("[" + selector.substr(1) + "]"));
+
+                return elements.filter(function (ele) {
+                    return ele.tagName.toLowerCase() == selector;
+                });
+            }
+        },
+        getUnderEnv: function (element, includegoat) {
+            includegoat = includegoat || true;
+            if (element) {
+                var ar = [],
+                    children = Array.from(element.children);
+
+                function getChildren() {
+                    var childAr = [];
+                    children.forEach(function (child) {
+                        if (child.hasAttribute('goat')) {
+                            children.splice(children.indexOf(child), 1);
+                            if (includegoat)
+                                ar.push(child);
+                        } else
+                            childAr = childAr.concat(Array.from(child.children))
+                    });
+                    ar = ar.concat(children);
+                    children = childAr;
+                    if (children.length > 0)
+                        return getChildren();
+                    else
+                        return ar;
+                }
+
+                return getChildren();
+            }
+        },
+        filterByAttribute: function (ar, attr) {
+            return ar.filter(function (ele) {
+                return ele.hasAttribute(attr);
+            });
+        }
+    };
+
+    goat.extend(gui);
+
+    /*
+     TAG
+     */
+
+    var _modules = {};
+
+    function _removeComments(str) {
+        return str.replace('(/\*([^*]|[\r\n]|(\*+([^*/]|[\r\n])))*\*+/)|(//.*)');
+    }
+
+    function _generateGuid() {
+        function s4() {
+            return Math.floor((1 + Math.random()) * 0x10000)
+                .toString(16)
+                .substring(1);
+        }
+
+        return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+            s4() + '-' + s4() + s4() + s4();
+    }
+
+    function _loadModule(moduleName, callback) {
+        var module = _modules[moduleName];
+        if (module === undefined) {
+            goat.http.get(goat.moduleDir + '/' + moduleName + '.js', function (er, data) {
+                var fn = '(function(){ var module; ' + _removeComments(data) + ' return module;})()';
+                _modules[moduleName] = eval(fn);
+                goat.log(moduleName, 'loaded');
+                callback();
+            });
+        } else
+            callback();
+    }
+
+    function _getRequirements(req){
+        var $req = {};
+        req = req.split(',');
+        req.forEach()
+    }
+
+    function createTag(tagName, ele, modules, req, callback) {
+        modules = modules || [];
+        var env = {};
+        if (!(ele instanceof HTMLElement)) {
+            ele = ele || window.event;
+            ele = ele.target;
+        }
+
+        var path = goat.tagDir + "/" + tagName + "/" + tagName,
+            eleGuid = _generateGuid();
+        ele.dataset.guiId = eleGuid;
+
+        function loadTemplate(onLoaded) {
+            goat.http.get(path + '.html', function (er, data) {
+                env.$html = (ele.innerHTML + "").replace(/\r?\n|\r/g);
+                ele.innerHTML = data;
+                onLoaded();
+            });
+
+            env.template = path + '.html';
+        }
+
+        function loadCSS() {
+            var link = document.createElement("link");
+            link.rel = "stylesheet";
+            link.type = "text/css";
+            link.href = path + ".css";
+            ele.appendChild(link);
+            env.css = path + '.css';
+        }
+
+        function loadModules(callback) {
+            var i = 0;
+            modules.forEach(function (module) {
+                _loadModule(module, function () {
+                    i++
+                });
+            });
+            var interval = setInterval(function () {
+                if (i === modules.length) {
+                    clearInterval(interval);
+                    callback();
+                }
+            })
+        }
+
+        function loadScript() {
+            goat.http.get(path + '.js', function (er, data) {
+                if (er)
+                    return console.error('goat: error loading ' + tagName + '.js\n', data);
+                var tag = goat.TagEnvironment(goat.get('%' + eleGuid), eleGuid, env.$html, _removeComments(data), _modules, req);
+                env.tag = tag;
+                tag.start();
+                if (callback)
+                    callback();
+            });
+
+            env.script = path + '.js';
+        }
+
+        function finishLoad() {
+            var item = document.createElement("img");
+            item.src = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
+            item.onload = function () {
+                loadCSS();
+                loadModules(loadScript);
+                goat.getUnder(ele, "_goat").forEach(function (e) {
+                    var modules = e.getAttribute('goat') || [];
+                    if (typeof modules === "string")
+                        modules = modules.split(',');
+
+                    var req = clone.getAttribute('req') || [];
+                    var $req = {};
+                    if (typeof req === "string")
+                        req = req.split(',');
+                    req.forEach(function (requirement){
+                        var pre = requirement.substr(0, 2);
+                        var name = requirement.substr(2);
+                        if(pre === "$$")
+                            $req[name] = $env[name];
+                    });
+
+                    createTag(e.localName, e, modules, $req);
+                });
+                item.parentNode.removeChild(item);
+            };
+            ele.appendChild(item);
+        }
+
+        loadTemplate(finishLoad);
+
+        return env;
+    }
+
+    function stopTag(env) {
+        env.tag.stop();
+    }
+
+    function stopModule(moduleName) {
+        delete _modules[moduleName];
+    }
+
+    goat.extend({
+        createTag: createTag,
+        stopTag: stopTag,
+        stopModule: stopModule
+    });
+
+    /*
+     ROUTING
+     */
+
+    var router = {
+        currentTag: undefined,
+        routes: {},
+        addRoute: function (path, tagName, modules) {
+            goat.router.routes[path] = {tagName: tagName, modules: modules}
+        },
+        el: null,
+        load: function () {
+            var router = goat.router;
+            // Lazy load view element:
+            router.el = router.el || goat.get('router');
+            // Current route url (getting rid of '#' in hash as well):
+            var url = location.hash.slice(1) || '/';
+            // Get route by url:
+            var route = router.routes[url];
+            // Do we have both a view and a route?
+            if (router.el && route) {
+                var newEl = document.createElement(route.tagName);
+                if (router.currentTag) {
+                    goat.stopTag(router.currentTag);
+                    var el = router.currentTag.tag.el;
+                    el.parentElement.replaceChild(newEl, el);
+                } else
+                    router.el.appendChild(newEl);
+                router.currentTag = goat.createTag(route.tagName, newEl, route.modules);
+            }
+        },
+        start: function () {
+            window.addEventListener('hashchange', goat.router.load);
+            window.addEventListener('load', goat.router.load);
+            goat.router.load();
+        }
+    };
+
+    goat.extend({router: router});
+
+    /*
+     START
+     */
+
+    function start() {
+        (goat.get("_goat") || []).forEach(function (item) {
+            goat.createTag(item.localName, item);
+        });
+        goat.loadScript(goat.init);
+    }
+
+    window.addEventListener('load', start);
+
+    global.goat = goat;
+
+})(window);

@@ -90,7 +90,7 @@
      TAG ENVIRONMENT
      */
 
-    goat.TagEnvironment = function ($tag, $guid, $html, $jstemplate, $modules) {
+    goat.TagEnvironment = function ($tag, $guid, $html, $jstemplate, $modules, $req) {
         var $env = {}, $private = {},
             $intervalfn = [],
             $interval = setInterval(function () {
@@ -179,7 +179,23 @@
                     var modules = clone.getAttribute('goat') || [];
                     if (typeof modules === "string")
                         modules = modules.split(',');
-                    goat.createTag(clone.localName, clone, modules);
+
+                    var req = clone.getAttribute('req') || [];
+                    var $req = {};
+                    if (typeof req === "string")
+                        req = req.split(',');
+                    req.forEach(function (requirement){
+                       var pre = requirement.substr(0, 2);
+                       var name = requirement.substr(2);
+                       if(pre === "$$") {
+                           if(name === arrName+'['+i+']')
+                               $req[varName] = $env[arrName][i];
+                           else
+                               $req[name] = $env[name];
+                       }
+                    });
+
+                    goat.createTag(clone.localName, clone, modules, $req);
                 }
                 update();
             }
@@ -402,7 +418,13 @@
             callback();
     }
 
-    function createTag(tagName, ele, modules, callback) {
+    function _getRequirements(req){
+        var $req = {};
+        req = req.split(',');
+        req.forEach()
+    }
+
+    function createTag(tagName, ele, modules, req, callback) {
         modules = modules || [];
         var env = {};
         if (!(ele instanceof HTMLElement)) {
@@ -452,7 +474,7 @@
             goat.http.get(path + '.js', function (er, data) {
                 if (er)
                     return console.error('goat: error loading ' + tagName + '.js\n', data);
-                var tag = goat.TagEnvironment(goat.get('%' + eleGuid), eleGuid, env.$html, _removeComments(data), _modules);
+                var tag = goat.TagEnvironment(goat.get('%' + eleGuid), eleGuid, env.$html, _removeComments(data), _modules, req);
                 env.tag = tag;
                 tag.start();
                 if (callback)
@@ -472,7 +494,19 @@
                     var modules = e.getAttribute('goat') || [];
                     if (typeof modules === "string")
                         modules = modules.split(',');
-                    createTag(e.localName, e, modules);
+
+                    var req = clone.getAttribute('req') || [];
+                    var $req = {};
+                    if (typeof req === "string")
+                        req = req.split(',');
+                    req.forEach(function (requirement){
+                        var pre = requirement.substr(0, 2);
+                        var name = requirement.substr(2);
+                        if(pre === "$$")
+                            $req[name] = $env[name];
+                    });
+
+                    createTag(e.localName, e, modules, $req);
                 });
                 item.parentNode.removeChild(item);
             };
